@@ -3,7 +3,7 @@ import type { Plugin } from '@/api/models';
 import { getInstance } from '@module-federation/runtime';
 import type { RuntimePlugin, RuntimePluginModule } from '@orca/sdk';
 
-async function loadRemotePlugin(plugin: Plugin): Promise<RuntimePlugin> {
+export async function loadRemotePlugin(plugin: Plugin): Promise<RuntimePlugin> {
   const entryUrl = apiClient().getPluginUrl(plugin);
 
   const mf = getInstance();

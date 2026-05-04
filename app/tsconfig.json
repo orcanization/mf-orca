@@ -6,9 +6,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@orca/sdk": ["../sdk/src/index.ts"]
+      "@shared/*": ["./shared/*"],
+      "@orca/sdk": ["../sdk/src/index.ts"],
+      "provider": ["../@mf-types/provider"],
+      "*": ["./@mf-types/*"]
     }
   },
-  "include": ["src", "../sdk/src"],
+  "include": ["src", "../sdk/src", "../@mf-types/**/*.d.ts"],
   "exclude": ["**/node_modules"]
 }
