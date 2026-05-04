@@ -42,4 +42,12 @@ export class ApiClient {
   public getPlugins() {
     return this.get<Plugin[]>('/plugins');
   }
+
+  /**
+   * @param plugin The plugin to fetch the entrypoint URL for.
+   * @return Returns the entrypoint URL for a plugin.
+   */
+  public getPluginUrl(plugin: Plugin) {
+    return plugin.isLocal ? `${this.baseUrl}${plugin.url}` : plugin.url;
+  }
 }
