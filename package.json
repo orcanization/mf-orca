@@ -2,6 +2,14 @@
   "name": "@orca/workspacese",
   "workspaces": ["app", "sdk"],
   "scripts": {
+    "reset": "npm run reset -w app",
+    "dev": "npm run dev -w app",
+    "build": "npm run build -w app",
+    "start": "npm run start -w app",
+    "serve": "npm run serve -w app",
+    "new": "npm run new -w app",
+    "prepare": "npm run prepare -w app",
+    "upgrade": "npm run upgrade -w app",
     "lint": "biome check",
     "lint:fix": "biome check --write"
   },
