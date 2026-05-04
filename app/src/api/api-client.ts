@@ -48,6 +48,8 @@ export class ApiClient {
    * @return Returns the entrypoint URL for a plugin.
    */
   public getPluginUrl(plugin: Plugin) {
-    return plugin.isLocal ? `${this.baseUrl}${plugin.url}` : plugin.url;
+    return plugin.isLocal
+      ? `${this.baseUrl}/installed_plugins/${plugin.url}/mf-manifest.json`
+      : plugin.url;
   }
 }
