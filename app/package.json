@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@modern-js/runtime": "0.0.0-canary-20260129131527",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "@orca/sdk": "file:../sdk"
   },
   "devDependencies": {
@@ -26,8 +26,8 @@
     "typescript": "~5.0.4",
     "@types/jest": "~29.2.4",
     "@types/node": "~18.11.9",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "~18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "rimraf": "^6.0.1",
     "@module-federation/modern-js-v3": "^2.4.0"
   }
