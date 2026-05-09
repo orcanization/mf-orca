@@ -3,7 +3,7 @@ import './index.css';
 import { loadRemotePlugins } from '@/plugins/plugin-loader';
 import type { PageData } from '@/routes/page.data';
 import { useLoaderData } from '@modern-js/runtime/router';
-import { getInstance, registerRemotes } from '@module-federation/runtime';
+import { getInstance } from '@module-federation/runtime';
 import type { RuntimePlugin } from '@orca/sdk';
 import { useEffect, useState } from 'react';
 
