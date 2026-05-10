@@ -1,17 +1,21 @@
 import { Helmet } from '@modern-js/runtime/head';
 import './index.css';
-import { loadRemotePlugins } from '@/plugins/plugin-loader';
+import {
+  loadRemotePlugins,
+  resolveRemoteComponent,
+} from '@/plugins/plugin-loader';
 import type { PageData } from '@/routes/page.data';
 import { useLoaderData } from '@modern-js/runtime/router';
 import { getInstance } from '@module-federation/runtime';
-import type { RuntimePlugin } from '@orca/sdk';
 import { useEffect, useState } from 'react';
+import type { ComponentType } from 'react';
 
-export default () => {
+function Page() {
   const data = useLoaderData<PageData>();
   const plugins = data.plugins;
-  const [loadedPlugin, setLoadedPlugin] = useState<RuntimePlugin | null>(null);
+  const [loadedPlugin, setLoadedPlugin] = useState<ComponentType | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const LoadedPlugin = loadedPlugin;
 
   useEffect(() => {
     if (plugins.length > 0) {
@@ -21,14 +25,24 @@ export default () => {
       if (!mfInstance)
         throw new Error('Module Federation instance is not initialized');
 
+      setLoadedPlugin(null);
+      setError(null);
+
       loadRemotePlugins(mfInstance, plugins);
 
       for (const plugin of plugins) {
         mfInstance
           .loadRemote(plugin.id.toString())
           .then(module => {
-            const typedModule = module as { default: RuntimePlugin };
-            setLoadedPlugin(typedModule.default);
+            const remoteComponent = resolveRemoteComponent(module);
+
+            if (!remoteComponent) {
+              throw new Error(
+                `Remote plugin "${plugin.name}" did not export a renderable component`,
+              );
+            }
+
+            setLoadedPlugin(() => remoteComponent);
           })
           .catch(err => {
             setError(err.message);
@@ -55,8 +69,10 @@ export default () => {
 
       <div className="landing-page">
         {error && <p>Error loading plugin: {error}</p>}
-        {loadedPlugin && <loadedPlugin.Component />}
+        {LoadedPlugin && <LoadedPlugin />}
       </div>
     </div>
   );
-};
+}
+
+export default Page;
