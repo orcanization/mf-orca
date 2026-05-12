@@ -1,12 +1,9 @@
-import {
-  loadRemotePlugins,
-  resolveRemoteComponent,
-} from '@/plugins/plugin-loader';
-import type { RootLayoutData } from '@/routes/layout';
-import { useOutletContext } from '@modern-js/runtime/router';
+import { loadRemotePlugins } from '@/plugins/plugin-loader';
+import { useLoaderData } from '@modern-js/runtime/router';
+import { createRemoteAppComponent } from '@module-federation/modern-js-v3/react';
 import { getInstance } from '@module-federation/runtime';
-import { useEffect, useState } from 'react';
-import type { ComponentType } from 'react';
+import { useEffect } from 'react';
+import type { RemoteRouteData } from './$.data';
 
 const ErrorBoundary = (info?: { error: { message: string } }) => {
   return (
@@ -16,58 +13,24 @@ const ErrorBoundary = (info?: { error: { message: string } }) => {
     </div>
   );
 };
-
 const Loading = <div>loading...</div>;
 
-export default function RemoteApp() {
-  const { plugins } = useOutletContext<RootLayoutData>();
-
-  const [loadedApp, setLoadedApp] = useState<ComponentType | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const LoadedApp = loadedApp;
+export default function Page() {
+  const { plugins } = useLoaderData<RemoteRouteData>();
 
   useEffect(() => {
     window.__ORCA_API_URL__ = 'http://localhost:8888';
 
     const mfInstance = getInstance();
-    if (!mfInstance) {
-      setIsLoading(false);
+    if (!mfInstance)
       throw new Error('Module Federation instance is not initialized');
-    }
 
     loadRemotePlugins(mfInstance, plugins);
-
-    // Dynamically load the remote app
-    mfInstance
-      .loadRemote('project_stats/app')
-      .then(module => {
-        const remoteComponent = resolveRemoteComponent(module);
-
-        if (!remoteComponent) {
-          throw new Error(
-            'Remote app "project_stats" did not export a renderable component',
-          );
-        }
-
-        setLoadedApp(() => remoteComponent);
-      })
-      .catch(err => {
-        setError(err.message);
-        console.error('Failed to load remote app:', err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
   }, [plugins]);
 
-  if (isLoading) {
-    return Loading;
-  }
-
-  if (error) {
-    return ErrorBoundary({ error: { message: error } });
-  }
-
-  return LoadedApp ? <LoadedApp /> : null;
+  return createRemoteAppComponent({
+    loader: () => loadRemote('project_stats/app'),
+    fallback: ErrorBoundary,
+    loading: Loading,
+  });
 }

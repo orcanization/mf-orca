@@ -32,7 +32,7 @@ function Page() {
 
       for (const plugin of plugins) {
         mfInstance
-          .loadRemote(plugin.id.toString())
+          .loadRemote(`${plugin.id.toString()}/provider`)
           .then(module => {
             const remoteComponent = resolveRemoteComponent(module);
 
