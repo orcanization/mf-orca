@@ -1,6 +1,7 @@
 import { loadRemotePlugins } from '@/plugins/plugin-loader';
 import { useLoaderData } from '@modern-js/runtime/router';
 import { createRemoteAppComponent } from '@module-federation/modern-js-v3/react';
+import { loadRemote } from '@module-federation/modern-js-v3/runtime';
 import { getInstance } from '@module-federation/runtime';
 import { useEffect } from 'react';
 import type { RemoteRouteData } from './$.data';
